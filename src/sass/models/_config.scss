@@ -1,0 +1,11 @@
+@use 'variables';
+* {
+    box-sizing: border-box;
+    padding: 0; margin: 0;
+}
+body {
+    font-family: "Kumbh Sans", sans-serif;
+    width: 100%;
+    min-height: 100vh;
+    background-color: variables.$blue-850;
+}

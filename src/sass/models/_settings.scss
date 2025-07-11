@@ -1,0 +1,200 @@
+@use 'variables';
+.pomodoro {
+    &__settings {
+        display: none;
+        width: 327px; height: auto;
+        background-color: #fff;
+        border-radius: 20px;
+        @media screen and (min-width: 768px) {
+            width: 540px;
+        }
+    }
+    &__part {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px;
+        border-bottom: 1px solid variables.$grey-200;
+    }
+
+    &__set {
+        color: variables.$blue-900;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 1.25;
+    }
+
+    &__close {
+        object-fit: contain; width: 13px; height: 13px;
+        cursor: pointer;
+    }
+
+    &__form {
+        padding: 0 24px;
+        position: relative;
+        @media screen and (min-width: 768px) {
+            padding: 0 32px;
+        }
+    }
+
+    &__section {
+        padding: 24px 0;
+        border-bottom: 1px solid variables.$grey-200;
+        &--last {
+            border-bottom: none;
+            padding-bottom: 60px;
+        }
+        &-content {
+            @media screen and (min-width: 768px) {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+    }
+    
+    &__subtitle {
+        color: variables.$blue-900;
+        letter-spacing: 4.23px;
+        font-weight: bold;
+        font-size: 11px;
+        text-align: center;
+        margin-bottom: 20px;
+        @media screen and (min-width: 768px) {
+            font-size: 13px;
+            text-align: start;
+            line-height: 1.25;
+            letter-spacing: 5px;
+            margin-bottom: 0;
+        }
+    }
+
+    &__inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        @media screen and (min-width: 768px) {
+            gap: 16px;
+            flex-direction: row;
+        }
+    }
+
+    &__block {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        @media screen and (min-width: 768px) {
+            flex-grow: 1;
+            gap: 16px;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+
+    &__label {
+        color: variables.$blue-850;
+        opacity: 0.4;
+        font-family: inherit;
+        font-size: 12px;
+        line-height: 1.25;
+        font-weight: bold;
+    }
+    &__input {
+        height: 40px; padding: 16px 20px;
+        background-color: variables.$blue-50;
+        font-family: inherit;
+        font-size: 13px; line-height: 1.25; letter-spacing: 5px;
+        width: 140px;
+        border-radius: 10px;
+        border: none;
+        &:disabled {
+            background-color: #eff1fa;
+            opacity: 0.4;
+        }
+    }
+
+
+    &__fonts {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    &__font {
+        background-color: variables.$blue-50;
+        padding: 16px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.1);
+        }
+        &--active {
+            color: #fff;
+            background-color: variables.$blue-900;
+        }
+        &--roboto {
+            font-family: "Roboto Slab", serif;
+        }
+        &--space {
+            font-family: "Space Mono", monospace;
+        }
+    }
+
+    &__colors {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    &__color {
+        cursor: pointer;
+        width: 50px; height: 50px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        &:hover {
+            transform: scale(1.1);
+        }
+        &--red {
+            background-color: variables.$red-400;
+        }
+        &--cyan {
+            background-color: variables.$cyan-300;
+        }
+        &--purple {
+            background-color: variables.$purple;
+        }
+        &--active::after {
+            content: '✔️'
+        }
+    }
+
+    &__apply {
+        cursor: pointer;
+        display: block;
+        border: none;
+        font-family: inherit;
+        width: 140px; height: 53px;
+        border-radius: 27px;
+        font-weight: bold;
+        font-size: 16px;
+        margin-inline: auto;
+        background-color: variables.$red-400;
+        color: #fff;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 26px);
+        transition: background-color 0.4s ease;
+        &:disabled {
+            background-color: #f29393;
+        }
+    }
+
+}
+
+#first {
+    margin-bottom: 20px;
+}
