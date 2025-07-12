@@ -75,7 +75,6 @@ function showSettings() {
 function closeSettings() {
     relojWindow.style.display = 'block';
     settingsWindow.style.display = 'none';
-    resetConfig(); /// aqui le voy agregar algo
 }
 
 btnSettings.addEventListener('click', showSettings);
