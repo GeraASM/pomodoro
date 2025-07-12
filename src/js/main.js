@@ -1,16 +1,41 @@
 const saveOptions = {
-    option: 'pomodoro' || 'short' || 'long',
-    font: "Kumbh Sans" || "Roboto Slab" || "Space Mono",
-    color: "#F87070" || "#70F3F8" || "#D881F8",
+    option: 'pomodoro',
+    font: "Kumbh Sans",
+    color: "#F87070",
     time: 0
 }
 const options = document.querySelectorAll(".pomodoro__option");
+window.addEventListener("DOMContentLoaded", () => {
+    addColorOption();
+})
+function addColorOption() {
+    options.forEach(o => {
+        if (o.classList.contains('pomodoro__option--active')) {
+            o.style.backgroundColor = saveOptions.color;
+        }
+    });
+}
+
+
+function removeColorOption() {
+    options.forEach(o => {
+        if (o.classList.contains('pomodoro__option--active')) {
+            o.style.backgroundColor = 'transparent';
+        }
+    });
+}
+
+
+
 function selectOption(e) {
+    removeColorOption();
     optionsRemoveClass(options, "pomodoro__option--active");
     const optionClick = e.currentTarget;
     saveOptions.option = optionClick.dataset.option;
     console.log(saveOptions.option);
     optionClick.classList.add("pomodoro__option--active");
+    optionClick.style.backgroundColor = saveOptions.color;
+    
 }
 
 options.forEach(o => o.addEventListener("click", selectOption));
@@ -49,6 +74,7 @@ const seconds = document.getElementById("seconds");
 const long = document.getElementById("long");
 const btnApply = document.getElementById("apply");
 const inputs = document.querySelectorAll(".pomodoro__input");
+const inputLong = document.getElementById("long");
 btnSettings.addEventListener("click", (e) => {
     setTimeout(() => {
         reloj.style.display = 'none'; settingsWindow.style.display = 'block';
@@ -86,34 +112,114 @@ function validateInput(number, inputOption) {
     return false;
 }
 inputs.forEach(i => i.addEventListener("input", btnApplyActive));
-
+const valueCorrect = /^\d{1,2}:\d{1,2}$/;
+let saveInput;
+function validateLong(e) {
+    console.log(e.currentTarget.value);
+    let time = e.currentTarget.value;
+    let timeModify = time.padStart(2, '0');
+    console.log(timeModify);
+    e.currentTarget.value = timeModify;
+    if (timeModify.length == 2 && timeModify.slice(-1) !== ':' && numberCorrect.test(timeModify)) {
+        timeModify += ':';
+        e.currentTarget.value += ':';
+    }
+    if (valueCorrect.test(timeModify)) {
+        saveInput = timeModify.split(':');
+        console.log(saveInput);
+        btnApply.disabled = false;
+        return
+    } else {
+        btnApply.disabled = true;
+    }
+}
+inputLong.addEventListener("input", validateLong);
 
 // Add all styles, colors and times
 const circleBorder = document.getElementById("circle");
 const body = document.querySelector("body");
 const minutesShow = document.getElementById("timeMinutes");
 const secondsShow = document.getElementById("timeSeconds");
+
+
 function applyConfiguration(e) {
     e.preventDefault();
-    resetValueInput();
     setTimeout(() => {
         reloj.style.display = 'block'; 
         settingsWindow.style.display = 'none';
-    }, 1000);
+    }, 50);
     body.style.fontFamily = saveOptions.font;
     circleBorder.style.borderColor = saveOptions.color;
+    minutesShow.textContent = saveOptions.option === 'pomodoro' ? (saveOptions.time).toString().padStart(2, '0') : '00';
+    secondsShow.textContent = saveOptions.option === 'short' ? (saveOptions.time).toString().padStart(2, '0') : '00';
+    if (saveOptions.option === 'long') {
+        let unionTime = '';
+        const [partOne, partTwo] = saveInput;
+        if (partOne && partTwo) {
+            unionTime += partOne + ':';
+            minutesShow.textContent = partOne;
+            if (partTwo.length == 1) {
+                const secondsLong = partTwo + '0';
+                unionTime += secondsLong;
+                secondsShow.textContent = secondsLong;
+
+            } else {secondsShow.textContent = partTwo; unionTime += partTwo;}
+        }
+        saveOptions.time = unionTime || '00:00';
+        console.log(saveOptions);
+    }
+    
     options.forEach(o => {
         if (o.classList.contains("pomodoro__option--active")) {
             o.style.backgroundColor = saveOptions.color;
         }
         
     })
+    resetValueInput();
 }
+// let interval = null;
 
-btnApply.addEventListener("click", applyConfiguration);
+// function startTime(option) {
+//     clearInterval(interval); // Para evitar múltiples intervalos activos
+
+//     let totalSeconds;
+
+//     if (option === 'pomodoro') {
+//         totalSeconds = saveOptions.time * 60;  // para manejar en segundo debemos convertir a segundos en el podomoro
+//     } else if (option === 'short') {
+//         totalSeconds = saveOptions.time;
+//     } else if (option === 'long') {
+//         const [min, sec] = saveOptions.time.split(":");
+//         totalSeconds = parseInt(min) * 60 + parseInt(sec);
+//     }
+
+//     updateDisplay(totalSeconds); // Mostrar valores iniciales
+
+//     interval = setInterval(() => {
+//         totalSeconds--;
+
+//         if (!totalSeconds || totalSeconds <= 0) {
+//             clearInterval(interval);
+//             console.log("¡Tiempo terminado!");
+//             return;
+//         }
+
+//         updateDisplay(totalSeconds);
+//     }, 1000);
+// }
+
+// function updateDisplay(sec) {
+//     let mins = Math.floor(sec / 60);
+//     let secs = sec % 60;
+//     minutesShow.textContent = mins.toString().padStart(2, '0');
+//     secondsShow.textContent = secs.toString().padStart(2, '0');
+// }
+
+
 function resetValueInput() {
     saveOptions.time = 0;
     inputs.forEach(input => input.value = '');
+    inputLong.value = '';
 }
 
 window.addEventListener("DOMContentLoaded", resetValueInput);
