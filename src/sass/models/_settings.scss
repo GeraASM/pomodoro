@@ -189,7 +189,9 @@
         transform: translate(-50%, 26px);
         transition: background-color 0.4s ease;
         &:disabled {
-            background-color: #f29393;
+            // cursor: url("../assets/forbidden.png");
+            cursor: none;
+            background-color: #d39898;
         }
     }
 

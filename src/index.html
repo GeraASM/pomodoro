@@ -14,43 +14,43 @@
 </head>
 <body>
     <main class="pomodoro">
-        <header class="pomodoro__header">
+        <header id="reloj" class="pomodoro__header">
             <section class="pomodoro-content">
                 <h3 class="pomodoro__title">pomodoro</h3>
                 <div class="pomodoro__options">
-                    <p class="pomodoro__option pomodoro__option--active">pomodoro</p>
-                    <p class="pomodoro__option">short break</p>
-                    <p class="pomodoro__option">long break</p>                
+                    <p data-option="pomodoro" class="pomodoro__option pomodoro__option--active">pomodoro</p>
+                    <p data-option="short" class="pomodoro__option">short break</p>
+                    <p data-option="long" class="pomodoro__option">long break</p>                
                 </div>
             </section>
             <section class="pomodoro__chronometer">
                 <div class="pomodoro__circle">
                     <div class="pomodoro__circle-inside">
-                        <div class="pomodoro__circle-decoration">
+                        <div id="circle" class="pomodoro__circle-decoration">
                             <div class="pomodoro__times">
-                                <h1 class="pomodoro__minutes">17:59</h1>
+                                <h1 class="pomodoro__minutes"><span id="timeMinutes">00</span>:<span id="timeSeconds">00</span></h1>
                                 <p class="pomodoro__pause">PAUSE</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <figure class="settings">
+                <figure id="btnSettings" class="settings">
                     <img src="./assets/icon-settings.svg" alt="Settings" class="settings__img">
                 </figure>
             </section>
         </header>
-        <section class="pomodoro__settings">
+        <section id="settingsWindow" class="pomodoro__settings">
             <div class="pomodoro__part">
                 <h2 class="pomodoro__set">Settings</h2>
                 <img src="./assets/icon-close.svg" alt="Close" class="pomodoro__close">
             </div>
-            <form class="pomodoro__form">
+            <form class="pomodoro__form" novalidate>
                 <section class="pomodoro__section">
                     <h3 id="first" class="pomodoro__subtitle">TIME (MINUTES)</h3>
                     <section class="pomodoro__inputs">
                         <div class="pomodoro__block">
                             <label for="minutes" class="pomodoro__label">pomodoro</label>
-                            <input type="number" name="minutes" id="minutes" class="pomodoro__input">
+                            <input type="number" name="minutes" id="minutes" class="pomodoro__input" disabled>
                         </div>
                         <div class="pomodoro__block">
                             <label for="seconds" class="pomodoro__label">short break</label>
@@ -65,23 +65,24 @@
                 <section class="pomodoro__section pomodoro__section-content">
                     <h3 class="pomodoro__subtitle">FONT</h3>
                     <div class="pomodoro__fonts">
-                        <p class="pomodoro__font pomodoro__font--kumbh pomodoro__font--active">Aa</p>
-                        <p class="pomodoro__font pomodoro__font--roboto">Aa</p>
-                        <p class="pomodoro__font pomodoro__font--space">Aa</p>
+                        <p data-font="Kumbh Sans" class="pomodoro__font pomodoro__font--kumbh pomodoro__font--active">Aa</p>
+                        <p data-font="Roboto Slab" class="pomodoro__font pomodoro__font--roboto">Aa</p>
+                        <p data-font="Space Mono" class="pomodoro__font pomodoro__font--space">Aa</p>
                     </div>
                 </section>
                 <section class="pomodoro__section pomodoro__section-content pomodoro__section--last">
                     <h3 class="pomodoro__subtitle">COLOR</h3>
                     <div class="pomodoro__colors">
-                        <p class="pomodoro__color pomodoro__color--red pomodoro__color--active"></p>
-                        <p class="pomodoro__color pomodoro__color--cyan"></p>
-                        <p class="pomodoro__color pomodoro__color--purple"></p>
+                        <p data-color="#F87070" class="pomodoro__color pomodoro__color--red pomodoro__color--active"></p>
+                        <p data-color="#70F3F" class="pomodoro__color pomodoro__color--cyan"></p>
+                        <p data-color="#D881F8" class="pomodoro__color pomodoro__color--purple"></p>
                     </div>
                 </section>
-                <button type="submit" class="pomodoro__apply" disabled>Apply</button>
+                <button id="apply" type="submit" class="pomodoro__apply" disabled>Apply</button>
             </form>
         </section>
     </main>
+    <script defer src="./js/main.js"></script>
   <!-- pomodoro
   short break
   long break
