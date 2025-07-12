@@ -1,225 +1,152 @@
-const saveOptions = {
+const informationConfiguration = {
     option: 'pomodoro',
-    font: "Kumbh Sans",
-    color: "#F87070",
-    time: 0
-}
-const options = document.querySelectorAll(".pomodoro__option");
-window.addEventListener("DOMContentLoaded", () => {
-    addColorOption();
-})
-function addColorOption() {
-    options.forEach(o => {
-        if (o.classList.contains('pomodoro__option--active')) {
-            o.style.backgroundColor = saveOptions.color;
-        }
-    });
+    color: '#F87070',
+    time: ''
 }
 
 
-function removeColorOption() {
-    options.forEach(o => {
-        if (o.classList.contains('pomodoro__option--active')) {
-            o.style.backgroundColor = 'transparent';
-        }
-    });
-}
+// This is the part POMODORO select option
+const nameClassActive = 'pomodoro__option--active';
+const pomodoroOptions = document.querySelectorAll(".pomodoro__option");
 
-
-
-function selectOption(e) {
-    removeColorOption();
-    optionsRemoveClass(options, "pomodoro__option--active");
-    const optionClick = e.currentTarget;
-    saveOptions.option = optionClick.dataset.option;
-    console.log(saveOptions.option);
-    optionClick.classList.add("pomodoro__option--active");
-    optionClick.style.backgroundColor = saveOptions.color;
-    
-}
-
-options.forEach(o => o.addEventListener("click", selectOption));
-// Fonts
-const optionsFonts = document.querySelectorAll(".pomodoro__font");  
-function addFont(e) {
-    optionsRemoveClass(optionsFonts, "pomodoro__font--active");
-    const fontSelect = e.currentTarget;
-    saveOptions.font = fontSelect.dataset.font;
-    console.log(saveOptions.font);
-    fontSelect.classList.add("pomodoro__font--active");
-}
-optionsFonts.forEach(o => o.addEventListener("click", addFont))
-
-// Colors
-const optionsColor = document.querySelectorAll(".pomodoro__color");
-function addColor(e) {
-    optionsRemoveClass(optionsColor, "pomodoro__color--active");
-    const colorSelect = e.currentTarget;
-    saveOptions.color = colorSelect.dataset.color;
-    console.log(saveOptions.color);
-    colorSelect.classList.add("pomodoro__color--active"); 
-}
-optionsColor.forEach(o => o.addEventListener("click", addColor))
-
-
-function optionsRemoveClass(optionsClass, nameClass) {
-    optionsClass.forEach(o => o.classList.remove(nameClass));
-}
-
-const btnSettings = document.getElementById("btnSettings");
-const reloj = document.getElementById("reloj");
-const settingsWindow = document.getElementById("settingsWindow");
-const minutes = document.getElementById("minutes");
-const seconds = document.getElementById("seconds");
-const long = document.getElementById("long");
-const btnApply = document.getElementById("apply");
+// reset values
 const inputs = document.querySelectorAll(".pomodoro__input");
-const inputLong = document.getElementById("long");
-btnSettings.addEventListener("click", (e) => {
-    setTimeout(() => {
-        reloj.style.display = 'none'; settingsWindow.style.display = 'block';
-    }, 200);
-    inputs.forEach(input => input.disabled = true);
-    if (saveOptions.option === 'pomodoro') minutes.disabled = false;
-    if (saveOptions.option === 'short') seconds.disabled = false;
-    if (saveOptions.option === 'long') long.disabled = false;    
+const btnApply = document.getElementById("apply");
+const longInput = document.getElementById("long");
+window.addEventListener("DOMContentLoaded", () => {
+    addStyles(pomodoroOptions, nameClassActive);
+    inputs.forEach(input => input.value = '');
     btnApply.disabled = true;
-    console.log("Configuration initial in the form: ", saveOptions);
+    longInput.value = '';
 })
+function selectOption(e) {
+    const thisOption = e.currentTarget;
+    informationConfiguration.option = thisOption.dataset.option;
+    removeClass(pomodoroOptions, nameClassActive);
+    thisOption.classList.add(nameClassActive);
+    addStyles(pomodoroOptions, nameClassActive);
+   
+}
+pomodoroOptions.forEach(o => o.addEventListener("click", selectOption));
 
-function btnApplyActive(e) {
-    const input = e.currentTarget;
-    const isCorrectNumber = validateInput(input.value, input);
-    if (isCorrectNumber) {
-        btnApply.disabled = false; return;
-    }    
-    return btnApply.disabled = true;
+
+function removeClass(elements, nameClass) {
+    elements.forEach(element => element.classList.remove(nameClass));
 }
 
-const numberCorrect = /\d{1,2}/;
-function validateInput(number, inputOption) {
-    if (number && numberCorrect.test(number)) {
-        const numberInt = parseInt(number);
-        if (numberInt > 0 && numberInt <= 60) {
-            saveOptions.time = numberInt;
-            console.log("Values when all is Correct!", saveOptions);
-            // Here I will use localStorage.setItem() in the future;
-            return true;
+function addStyles(elements, nameClass) {
+    elements.forEach(element => {
+        if (element.classList.contains(nameClass)) {
+            element.style.backgroundColor = informationConfiguration.color;
         } else {
-            console.log("Remember input a number between 1 to 60!");
+             element.style.backgroundColor = 'transparent';
         }
+    })
+}
+
+// Enabled the inputs
+
+const minutesInput = document.getElementById("minutes");
+const secondsInput = document.getElementById("seconds");
+
+function activationInput() {
+        inputs.forEach(input => input.disabled = true);
+        longInput.disabled = true;
+        if (informationConfiguration.option === 'pomodoro') minutesInput.disabled = false;
+        if (informationConfiguration.option === 'short') secondsInput.disabled = false;
+        if (informationConfiguration.option === 'long') longInput.disabled = false;    
+}
+
+
+
+
+
+// START the configuration with press the button and CLOSE settings
+const btnSettings = document.getElementById('btnSettings');
+const btnClose = document.getElementById("btnClose");
+const relojWindow = document.getElementById("reloj");
+const settingsWindow  = document.getElementById("settingsWindow");
+function showSettings() {
+    relojWindow.style.display = 'none';
+    settingsWindow.style.display = 'block';
+    console.log(informationConfiguration);
+    activationInput();
+}
+function closeSettings() {
+    relojWindow.style.display = 'block';
+    settingsWindow.style.display = 'none';
+    resetConfig(); /// aqui le voy agregar algo
+}
+
+btnSettings.addEventListener('click', showSettings);
+btnClose.addEventListener('click', closeSettings);
+
+
+
+// Activate de btnValidate
+
+// Valide the inputs
+const number = /^\d{1,2}$/;
+
+function saveInputPomodoro(e) {
+    if(validateInput(e)) {
+        btnApply.disabled = false; return;
+    } 
+    btnApply.disabled = true; return;
+}
+
+function saveInputShort(e) {
+    if(validateInput(e)) {
+        btnApply.disabled = false; return;
+    } 
+    btnApply.disabled = true; return;
+}
+
+function validateInput(e) {
+    let input = e.currentTarget.value;
+    console.log(input);
+    if (number.test(input)) {
+        if (parseInt(input) > 0 && parseInt(input) <= 60) {
+            informationConfiguration.time = input.padStart(2, '0');
+            console.log(informationConfiguration);
+            return true;
+        } 
     }
     return false;
 }
-inputs.forEach(i => i.addEventListener("input", btnApplyActive));
-const valueCorrect = /^\d{1,2}:\d{1,2}$/;
-let saveInput;
-function validateLong(e) {
-    console.log(e.currentTarget.value);
-    let time = e.currentTarget.value;
-    let timeModify = time.padStart(2, '0');
-    console.log(timeModify);
-    e.currentTarget.value = timeModify;
-    if (timeModify.length == 2 && timeModify.slice(-1) !== ':' && numberCorrect.test(timeModify)) {
-        timeModify += ':';
-        e.currentTarget.value += ':';
-    }
-    if (valueCorrect.test(timeModify)) {
-        saveInput = timeModify.split(':');
-        console.log(saveInput);
-        btnApply.disabled = false;
-        return
+
+// Valide the long
+const numberLong = /^\d{1,2}:\d{1,2}$/;
+function saveInputLong(e) {
+    let inputLong = e.currentTarget.value;
+    if (inputLong.length == 2 && inputLong.slice(-1) !== ':') {
+        inputLong += ":";
+        e.currentTarget.value += ":";
+    } 
+    if (numberLong.test(inputLong)) {
+        const [partOne, partTwo]  = inputLong.split(":");
+        if (parseInt(partOne) > 0 && parseInt(partOne) < 61 && parseInt(partTwo) > 0 && parseInt(partTwo) < 61) {
+            informationConfiguration.time = partOne.length == 1 ? partOne.padStart(2, '0') + ':' : partOne + ":";
+            informationConfiguration.time += partTwo.length == 1 ? partTwo + '0' : partTwo;
+            btnApply.disabled  = false;
+            console.log(informationConfiguration);
+            return;
+        }
     } else {
         btnApply.disabled = true;
     }
 }
-inputLong.addEventListener("input", validateLong);
 
-// Add all styles, colors and times
-const circleBorder = document.getElementById("circle");
-const body = document.querySelector("body");
-const minutesShow = document.getElementById("timeMinutes");
-const secondsShow = document.getElementById("timeSeconds");
+minutesInput.addEventListener("input", saveInputPomodoro);
+secondsInput.addEventListener("input", saveInputShort);
+longInput.addEventListener("input", saveInputLong);
 
 
-function applyConfiguration(e) {
-    e.preventDefault();
-    setTimeout(() => {
-        reloj.style.display = 'block'; 
-        settingsWindow.style.display = 'none';
-    }, 50);
-    body.style.fontFamily = saveOptions.font;
-    circleBorder.style.borderColor = saveOptions.color;
-    minutesShow.textContent = saveOptions.option === 'pomodoro' ? (saveOptions.time).toString().padStart(2, '0') : '00';
-    secondsShow.textContent = saveOptions.option === 'short' ? (saveOptions.time).toString().padStart(2, '0') : '00';
-    if (saveOptions.option === 'long') {
-        let unionTime = '';
-        const [partOne, partTwo] = saveInput;
-        if (partOne && partTwo) {
-            unionTime += partOne + ':';
-            minutesShow.textContent = partOne;
-            if (partTwo.length == 1) {
-                const secondsLong = partTwo + '0';
-                unionTime += secondsLong;
-                secondsShow.textContent = secondsLong;
-
-            } else {secondsShow.textContent = partTwo; unionTime += partTwo;}
-        }
-        saveOptions.time = unionTime || '00:00';
-        console.log(saveOptions);
-    }
-    
-    options.forEach(o => {
-        if (o.classList.contains("pomodoro__option--active")) {
-            o.style.backgroundColor = saveOptions.color;
-        }
-        
-    })
-    resetValueInput();
-}
-// let interval = null;
-
-// function startTime(option) {
-//     clearInterval(interval); // Para evitar múltiples intervalos activos
-
-//     let totalSeconds;
-
-//     if (option === 'pomodoro') {
-//         totalSeconds = saveOptions.time * 60;  // para manejar en segundo debemos convertir a segundos en el podomoro
-//     } else if (option === 'short') {
-//         totalSeconds = saveOptions.time;
-//     } else if (option === 'long') {
-//         const [min, sec] = saveOptions.time.split(":");
-//         totalSeconds = parseInt(min) * 60 + parseInt(sec);
-//     }
-
-//     updateDisplay(totalSeconds); // Mostrar valores iniciales
-
-//     interval = setInterval(() => {
-//         totalSeconds--;
-
-//         if (!totalSeconds || totalSeconds <= 0) {
-//             clearInterval(interval);
-//             console.log("¡Tiempo terminado!");
-//             return;
-//         }
-
-//         updateDisplay(totalSeconds);
-//     }, 1000);
-// }
-
-// function updateDisplay(sec) {
-//     let mins = Math.floor(sec / 60);
-//     let secs = sec % 60;
-//     minutesShow.textContent = mins.toString().padStart(2, '0');
-//     secondsShow.textContent = secs.toString().padStart(2, '0');
-// }
 
 
-function resetValueInput() {
-    saveOptions.time = 0;
-    inputs.forEach(input => input.value = '');
-    inputLong.value = '';
-}
 
-window.addEventListener("DOMContentLoaded", resetValueInput);
+
+
+
+
+
