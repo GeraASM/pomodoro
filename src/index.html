@@ -50,11 +50,11 @@
                     <section class="pomodoro__inputs">
                         <div class="pomodoro__block">
                             <label for="minutes" class="pomodoro__label">pomodoro</label>
-                            <input type="number" name="minutes" id="minutes" class="pomodoro__input" disabled>
+                            <input type="number" name="minutes" id="minutes" class="pomodoro__input" min="0" max="60" disabled>
                         </div>
                         <div class="pomodoro__block">
                             <label for="seconds" class="pomodoro__label">short break</label>
-                            <input type="number" name="seconds" class="pomodoro__input" id="seconds" disabled>
+                            <input type="number" name="seconds" class="pomodoro__input" id="seconds" min="0" max="60" disabled>
                         </div>
                         <div class="pomodoro__block">
                             <label for="long" class="pomodoro__label">long break</label>

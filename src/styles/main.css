@@ -188,7 +188,6 @@ body {
   width: 166px;
   height: 117px;
   text-align: center;
-  border: 1px solid red;
 }
 @media screen and (min-width: 768px) {
   .pomodoro__times {

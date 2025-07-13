@@ -1,6 +1,7 @@
 const informationConfiguration = {
     option: 'pomodoro',
     color: '#F87070',
+    font: 'Kumbh Sans',
     time: ''
 }
 
@@ -11,7 +12,6 @@ const pomodoroOptions = document.querySelectorAll(".pomodoro__option");
 
 // reset values
 const inputs = document.querySelectorAll(".pomodoro__input");
-const btnApply = document.getElementById("apply");
 const longInput = document.getElementById("long");
 window.addEventListener("DOMContentLoaded", () => {
     addStyles(pomodoroOptions, nameClassActive);
@@ -115,7 +115,7 @@ function validateInput(e) {
 }
 
 // Valide the long
-const numberLong = /^\d{1,2}:\d{1,2}$/;
+const numberLong = /^\d{1,2}:\d{2}$/;
 function saveInputLong(e) {
     let inputLong = e.currentTarget.value;
     if (inputLong.length == 2 && inputLong.slice(-1) !== ':') {
@@ -123,13 +123,18 @@ function saveInputLong(e) {
         e.currentTarget.value += ":";
     } 
     if (numberLong.test(inputLong)) {
-        const [partOne, partTwo]  = inputLong.split(":");
+        let [partOne, partTwo]  = inputLong.split(":");
         if (parseInt(partOne) > 0 && parseInt(partOne) < 61 && parseInt(partTwo) > 0 && parseInt(partTwo) < 61) {
             informationConfiguration.time = partOne.length == 1 ? partOne.padStart(2, '0') + ':' : partOne + ":";
-            informationConfiguration.time += partTwo.length == 1 ? partTwo + '0' : partTwo;
-            btnApply.disabled  = false;
-            console.log(informationConfiguration);
-            return;
+            let partTwoModify = partTwo.length == 1 ? partTwo + '0' : partTwo;
+            if (parseInt(partTwoModify) < 61) {
+                informationConfiguration.time += partTwoModify;
+                console.log(informationConfiguration);
+                btnApply.disabled  = false;
+            } else {
+                btnApply.disabled = true;
+                return;
+            }
         }
     } else {
         btnApply.disabled = true;
@@ -140,6 +145,61 @@ minutesInput.addEventListener("input", saveInputPomodoro);
 secondsInput.addEventListener("input", saveInputShort);
 longInput.addEventListener("input", saveInputLong);
 
+
+// Select fonts
+const btnsFont = document.querySelectorAll(".pomodoro__font");
+function addFont(e) {
+    removeClass(btnsFont, 'pomodoro__font--active');
+    const btnFont =  e.currentTarget;
+    btnFont.classList.add("pomodoro__font--active");
+    informationConfiguration.font = btnFont.dataset.font;
+    console.log(informationConfiguration);
+}
+
+btnsFont.forEach(btn => btn.addEventListener("click", addFont));
+
+
+// Select color
+const btnsColor = document.querySelectorAll(".pomodoro__color");
+function addColor(e) {
+    removeClass(btnsColor, 'pomodoro__color--active');
+    const btnColor = e.currentTarget;
+    btnColor.classList.add("pomodoro__color--active");
+    informationConfiguration.color = btnColor.dataset.color;
+    console.log(informationConfiguration);
+}
+
+btnsColor.forEach(btn => btn.addEventListener("click", addColor));
+
+// Apply all styles
+const btnApply = document.getElementById("apply");
+const body = document.querySelector("body");
+const circle = document.getElementById("circle");
+const timeMinutesShow = document.getElementById("timeMinutes");
+const timeSecondsShow = document.getElementById("timeSeconds");
+function putAllDetails(e) {
+    e.preventDefault();
+    goPomodoro();
+    console.log(informationConfiguration);
+    body.style.fontFamily = informationConfiguration.font;
+    circle.style.borderColor = informationConfiguration.color;
+    if (informationConfiguration.option === 'pomodoro') timeMinutesShow.textContent = informationConfiguration.time;
+    if (informationConfiguration.option === 'short') timeSecondsShow.textContent = informationConfiguration.time;
+    if (informationConfiguration.option === 'long') {
+        const [minutes, seconds] = informationConfiguration.time.split(":");
+        timeMinutesShow.textContent = minutes;
+        timeSecondsShow.textContent = seconds;
+    }
+    addStyles(pomodoroOptions, nameClassActive);
+}
+function goPomodoro() {
+    relojWindow.style.display = 'block';
+    settingsWindow.style.display = 'none';
+}
+
+
+
+btnApply.addEventListener("click", putAllDetails);
 
 
 
