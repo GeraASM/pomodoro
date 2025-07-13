@@ -171,6 +171,9 @@ function addColor(e) {
 
 btnsColor.forEach(btn => btn.addEventListener("click", addColor));
 
+
+let secondsPomodoro = 0;
+
 // Apply all styles
 const btnApply = document.getElementById("apply");
 const body = document.querySelector("body");
@@ -183,14 +186,23 @@ function putAllDetails(e) {
     console.log(informationConfiguration);
     body.style.fontFamily = informationConfiguration.font;
     circle.style.borderColor = informationConfiguration.color;
-    if (informationConfiguration.option === 'pomodoro') timeMinutesShow.textContent = informationConfiguration.time;
-    if (informationConfiguration.option === 'short') timeSecondsShow.textContent = informationConfiguration.time;
+    if (informationConfiguration.option === 'pomodoro') {
+        timeMinutesShow.textContent = informationConfiguration.time;
+        secondsPomodoro = parseInt(informationConfiguration.time) * 60;
+    } 
+    if (informationConfiguration.option === 'short') {
+        timeSecondsShow.textContent = informationConfiguration.time;
+        secondsPomodoro = parseInt(informationConfiguration.time);
+    } 
     if (informationConfiguration.option === 'long') {
         const [minutes, seconds] = informationConfiguration.time.split(":");
         timeMinutesShow.textContent = minutes;
         timeSecondsShow.textContent = seconds;
+        secondsPomodoro = parseInt(minutes) * 60 + parseInt(seconds);
     }
     addStyles(pomodoroOptions, nameClassActive);
+
+    startPomodoro(secondsPomodoro);
 }
 function goPomodoro() {
     relojWindow.style.display = 'block';
@@ -202,10 +214,77 @@ function goPomodoro() {
 btnApply.addEventListener("click", putAllDetails);
 
 
+// Start POMODORO
+let interval = null;
+let isPaused = false;
+let currentSeconds = 0; 
 
+function startPomodoro(seconds) {
+    if (interval) return;
+    currentSeconds = seconds;
+    updateDisplay(currentSeconds);
 
+    interval = setInterval(() => {
+        currentSeconds--;
 
+        if (currentSeconds <= 0) {
+            clearInterval(interval);
+            interval = null;
+            updateDisplay(0);
+            onPomodoroEnd();
+            return;
+        }
 
+        updateDisplay(currentSeconds);
+    }, 1000);
+}
 
+function tougglePauseResume() {
+    if (interval) {
+        // if Active interval, Paused
+        clearInterval(interval);
+        interval = null;
+        isPaused = true;
+    } else if (isPaused) {
+        // If pause, resume and deactivate isPaused
+        interval ??= setInterval(() => {
+            currentSeconds--;
+
+            if (currentSeconds <= 0) {
+                clearInterval(interval);
+                interval = null;
+                updateDisplay(0);
+                onPomodoroEnd();
+                return;
+            }
+
+            updateDisplay(currentSeconds);
+        }, 1000);
+
+        isPaused = false;
+    }
+}
+
+function pause() {
+    clearInterval(interval);
+    interval = null;
+}
+
+function reset() {
+    pause();
+    currentSeconds = 0;
+    updateDisplay(currentSeconds);
+}
+
+function updateDisplay(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    timeMinutesShow.textContent = String(minutes).padStart(2, '0');
+    timeSecondsShow.textContent = String(secs).padStart(2, '0');
+}
+
+function onPomodoroEnd() {
+    alert("¡Pomodoro completo! 🎉");
+}
 
 

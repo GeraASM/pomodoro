@@ -123,12 +123,14 @@
     &__font {
         background-color: variables.$blue-50;
         padding: 16px;
+         border: 4px solid #fff;
         border-radius: 50%;
         font-weight: bold;
         font-size: 16px;
         cursor: pointer;
         &:hover {
-            transform: scale(1.1);
+            outline: 2px solid variables.$blue-50;
+
         }
         &--active {
             color: #fff;
