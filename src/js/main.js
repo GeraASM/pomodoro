@@ -240,13 +240,16 @@ function startPomodoro(seconds) {
 }
 
 function tougglePauseResume() {
+    const pomodoroPause = document.querySelector(".pomodoro__pause");
     if (interval) {
         // if Active interval, Paused
         clearInterval(interval);
         interval = null;
         isPaused = true;
+        pomodoroPause.textContent = 'RESUME';
     } else if (isPaused) {
         // If pause, resume and deactivate isPaused
+        pomodoroPause.textContent = 'PAUSE';
         interval ??= setInterval(() => {
             currentSeconds--;
 
